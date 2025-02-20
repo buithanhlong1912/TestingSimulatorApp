@@ -8,7 +8,6 @@ export class MarginService {
   constructor(private readonly supabaseService: SupabaseService) {}
 
   async calculateMargin(data: CalculateMarginDto) {
-    console.log("type of salary", Object.values(data).map(value => Number(value)));
     const formattedData = convertValuesToNumbers(data as any);
     const total_cost = parseFloat((formattedData.monthly_salary * 17.3225 + formattedData.indirect_costs + formattedData.work_insurance + formattedData.health_insurance + formattedData.gym_allowance + formattedData.meal_allowance + formattedData.licenses_software).toFixed(2));
     const margin = parseFloat((formattedData.customer_cost - total_cost).toFixed(2));

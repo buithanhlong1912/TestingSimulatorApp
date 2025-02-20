@@ -10,7 +10,7 @@ export interface InputData {
     work_insurance: string,
   }
   
-  export const validateInputs = (data: InputData): boolean => {
-    return Object.values(data).every((value) => value !== "" && !isNaN(Number(value)));
-  };
+export const validateInputs = (data: InputData): boolean => {
+  return Object.values(data).every((value) => value !== "" && !isNaN(Number(value)));
+};
   

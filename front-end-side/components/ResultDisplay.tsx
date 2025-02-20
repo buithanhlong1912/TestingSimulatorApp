@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-interface ResultProps {
+export interface ResultProps {
   result: {
     total_cost: number;
     margin: number;
@@ -11,7 +11,6 @@ interface ResultProps {
 }
 
 const ResultDisplay: FC<ResultProps> = ({ result }) => {
-  console.log(result);
   return (
     <div className="result">
       <h2 className="font-semibold text-lg">Calculation Results</h2>

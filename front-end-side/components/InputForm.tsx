@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, FC } from "react";
+import { useState, FC, Dispatch, SetStateAction } from "react";
 import { sendCalculation } from "../services/api";
 import { InputData } from "../utils/validation";
 
 interface InputFormProps {
-  setResult: (result: any) => void;
+  setResult: Dispatch<SetStateAction<null>>;
 }
 
 const InputForm: FC<InputFormProps> = ({ setResult }) => {
