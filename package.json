@@ -1,0 +1,16 @@
+{
+  "name": "codechallenge",
+  "version": "1.0.0",
+  "description": "Full stack code challenge",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "cd back-end-side && npm run start",
+    "dev:web": "cd front-end-side && npm run dev"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
