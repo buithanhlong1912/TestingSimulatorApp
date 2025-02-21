@@ -3,13 +3,15 @@
 import { useState, FC, Dispatch, SetStateAction } from "react";
 import { sendCalculation } from "../services/api";
 import { InputData } from "../utils/validation";
+import { IResult } from "./ResultDisplay";
 
 interface InputFormProps {
-  setResult: Dispatch<SetStateAction<null>>;
+  result: IResult[];
+  setResult: Dispatch<SetStateAction<IResult[]>>;
 }
 
-const InputForm: FC<InputFormProps> = ({ setResult }) => {
-  const [formData, setFormData] = useState<InputData>({
+const InputForm: FC<InputFormProps> = ({ result, setResult }) => {
+  const initialFormData: InputData = {
     monthly_salary: "",
     indirect_costs: "",
     work_insurance: "",
@@ -19,37 +21,77 @@ const InputForm: FC<InputFormProps> = ({ setResult }) => {
     licenses_software: "",
     customer_cost: "",
     current_rate: "",
-  });
+  };
+
+  const [formData, setFormData] = useState<InputData>(initialFormData);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    const rawValue = value.replace(/\D/g, "");
+    setFormData({ ...formData, [name]: rawValue });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const result = await sendCalculation(formData);
-    setResult(result);
+    try {
+      e.preventDefault();
+      const data = await sendCalculation(formData);
+
+      if (!data) {
+        return;
+      }
+
+      setResult([
+        ...result,
+        {
+          ...data,
+          key: result.length + 1,
+        },
+      ]);
+      setFormData(initialFormData);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="container">
-      {Object.keys(formData).map((key) => (
-        <div key={key}>
-          <label className="block font-medium">
-            {key.replace(/([A-Z])/g, " $1")}
-          </label>
-          <input
-            type="number"
-            name={key}
-            value={formData[key as keyof InputData]}
-            onChange={handleChange}
-            className="input"
-          />
-        </div>
-      ))}
-      <button type="submit" className="button">
-        Calculate
-      </button>
+    <form
+      onSubmit={handleSubmit}
+      className="w-full mx-auto p-6 bg-white rounded-lg shadow-lg"
+    >
+      <div className="grid grid-cols-3 gap-4">
+        {Object.keys(formData).map((key) => (
+          <div key={key} className="mb-4">
+            <label className="block font-medium">
+              {key
+                .replace(/_/g, " ")
+                .replace(/\b\w/g, (char) => char.toUpperCase())}
+            </label>
+            <input
+              type="text"
+              name={key}
+              value={Number(formData[key as keyof InputData]).toLocaleString(
+                "en-US"
+              )}
+              onChange={handleChange}
+              className="input"
+              onKeyDown={(e) => {
+                if (
+                  !/^\d$/.test(e.key) &&
+                  e.key !== "Backspace" &&
+                  e.key !== "Delete"
+                ) {
+                  e.preventDefault();
+                }
+              }}
+            />
+          </div>
+        ))}
+      </div>
+      <div className="flex justify-center mt-4">
+        <button type="submit" className="button">
+          Calculate
+        </button>
+      </div>
     </form>
   );
 };

@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 import InputForm from "../components/InputForm";
-import ResultDisplay from "../components/ResultDisplay";
+import ResultDisplay, { IResult } from "../components/ResultDisplay";
 
 export default function Home() {
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState<IResult[]>([]);
 
   return (
     <div>
-      <InputForm setResult={setResult} />
-      {result && <ResultDisplay result={result} />}
+      <InputForm result={result} setResult={setResult} />
+      <ResultDisplay result={result} />
     </div>
   );
 }

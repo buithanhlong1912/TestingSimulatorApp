@@ -11,7 +11,7 @@ export const sendCalculation = async (data: InputData) => {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch data");
+      return null;
     }
 
     return await response.json();
